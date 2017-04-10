@@ -1,0 +1,2 @@
+* Only one Java instance with the same persistent identity may exist in a persistence context at any time. For example, if an Employee with a persistent identity (or id) of 158 exists in the persistence context, then no other Employee object with its id set to 158 may exist within that same persistence context. 
+* In order to remove an entity, the entity itself must be managed, meaning that it is present in the persistence context. 
