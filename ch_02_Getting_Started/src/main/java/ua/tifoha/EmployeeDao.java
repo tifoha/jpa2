@@ -21,7 +21,7 @@ public class EmployeeDao {
 
 	public List<Employee> findAll() {
 		return em
-				.createQuery("select e from Employee", Employee.class)
+				.createQuery("select emp from Employee emp", Employee.class)
 				.getResultList();
 	}
 
