@@ -17,10 +17,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ch_02_Getting_Started" />
+        <module name="ch_04_Object_Relational_Mapping" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="ch_02_Getting_Started" target="1.8" />
+      <module name="ch_04_Object_Relational_Mapping" target="1.8" />
       <module name="jpa2" target="1.8" />
     </bytecodeTargetLevel>
   </component>

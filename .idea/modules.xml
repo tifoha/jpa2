@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ch_02_Getting_Started/ch_02_Getting_Started.iml" filepath="$PROJECT_DIR$/ch_02_Getting_Started/ch_02_Getting_Started.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ch_04_Object_Relational_Mapping/ch_04_Object_Relational_Mapping.iml" filepath="$PROJECT_DIR$/ch_04_Object_Relational_Mapping/ch_04_Object_Relational_Mapping.iml" />
       <module fileurl="file://$PROJECT_DIR$/jpa2.iml" filepath="$PROJECT_DIR$/jpa2.iml" />
     </modules>
   </component>

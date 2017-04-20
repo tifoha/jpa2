@@ -7,6 +7,7 @@
   <version>1.0-SNAPSHOT</version>
   <modules>
     <module>ch_02_Getting_Started</module>
+    <module>ch_04_Object_Relational_Mapping</module>
   </modules>
   <packaging>pom</packaging>
 
