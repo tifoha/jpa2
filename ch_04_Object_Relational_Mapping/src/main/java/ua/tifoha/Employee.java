@@ -5,22 +5,34 @@ import static javax.persistence.AccessType.PROPERTY;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.AssociationOverride;
+import javax.persistence.AssociationOverrides;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Created by Vitaliy Sereda on 07.04.17.
  */
 @Entity
 //@Access(FIELD)
-@Table(name = "jpa2_2.emp")
+//@Table(name = "jpa2_2.emp")
+@Table(name = "emp")
 public class Employee {
 	@Id
 	public Long id;
@@ -30,11 +42,26 @@ public class Employee {
 
 	private BigDecimal wage = BigDecimal.ZERO;
 
-//	@ManyToOne(fetch = FetchType.LAZY)
+	//	@ManyToOne(fetch = FetchType.LAZY)
 //	private Firm firm;
+	@Embedded
+	@AttributeOverrides(@AttributeOverride(name = "state", column = @Column(name = "oblast", length = 50, unique = true)))
+	private Address address;
 
 	@Basic(fetch = FetchType.LAZY)
 	private EmbeddedField embeddedField;
+
+	@ManyToMany
+	@JoinTable(name = "emp_proj", joinColumns = {@JoinColumn(name = "emp")}, inverseJoinColumns = @JoinColumn(name = "proj"))
+	private Set<Project> projects = new LinkedHashSet<>();
+
+	public Set<Project> getProjects() {
+		return projects;
+	}
+
+	public void setProjects(Set<Project> projects) {
+		this.projects = projects;
+	}
 
 	public static class EmbeddedField implements Serializable {
 

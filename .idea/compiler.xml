@@ -18,11 +18,21 @@
         <outputRelativeToContentRoot value="true" />
         <module name="ch_02_Getting_Started" />
         <module name="ch_04_Object_Relational_Mapping" />
+        <module name="ch_05_Collection_Mapping" />
+        <module name="ch_06_Entity_Manager" />
+        <module name="ch_07_Using_Queries" />
+        <module name="ch_08_Query_Language" />
+        <module name="ch_08_Using_Queries" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="ch_02_Getting_Started" target="1.8" />
       <module name="ch_04_Object_Relational_Mapping" target="1.8" />
+      <module name="ch_05_Collection_Mapping" target="1.8" />
+      <module name="ch_06_Entity_Manager" target="1.8" />
+      <module name="ch_07_Using_Queries" target="1.8" />
+      <module name="ch_08_Query_Language" target="1.8" />
+      <module name="ch_08_Using_Queries" target="1.8" />
       <module name="jpa2" target="1.8" />
     </bytecodeTargetLevel>
   </component>

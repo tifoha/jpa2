@@ -1,13 +1,5 @@
 package ua.tifoha;
 
-import static java.math.BigDecimal.valueOf;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import java.math.BigDecimal;
-import java.util.List;
-
 /**
  * Hello world!
  *
@@ -18,12 +10,19 @@ public class App
         try(DaoFactory daoFactory = new DaoFactory("MainUnit")) {
             GenericDao<Employee> employeeDao = daoFactory.getDao(Employee.class);
             GenericDao<Firm> firmDao = daoFactory.getDao(Firm.class);
-            System.out.println(firmDao.findOne(1));
-//            Firm firm = new Firm(1);
+            GenericDao<Department> departmentDao = daoFactory.getDao(Department.class);
+//            System.out.println(firmDao.findOne(1));
+            Department department = new Department();
+            department.setName("Dep");
+//            employeeDao.findOne(1L).ifPresent(e->department.getEmployees().add(e));
+            departmentDao.save(department);
+//            Firm firm = new Firm();
 //            firm.setName("Simple firm");
 //            firmDao.save(firm);
 //
 //            Employee employee = new Employee(1);
+//            departmentDao.flush();
+//            firmDao.flush();
 //            employee.setName("Vitaly sereda");
 //            employee.setSalary(new BigDecimal(15));
 //            employee.setEmbeddedField(new Employee.EmbeddedField("Value"));
