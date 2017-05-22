@@ -23,6 +23,7 @@
         <module name="ch_07_Using_Queries" />
         <module name="ch_08_Query_Language" />
         <module name="ch_08_Using_Queries" />
+        <module name="ch_09_Criteria_API" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -33,6 +34,7 @@
       <module name="ch_07_Using_Queries" target="1.8" />
       <module name="ch_08_Query_Language" target="1.8" />
       <module name="ch_08_Using_Queries" target="1.8" />
+      <module name="ch_09_Criteria_API" target="1.8" />
       <module name="jpa2" target="1.8" />
     </bytecodeTargetLevel>
   </component>

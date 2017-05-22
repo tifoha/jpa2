@@ -8,6 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/ch_06_Entity_Manager/ch_06_Entity_Manager.iml" filepath="$PROJECT_DIR$/ch_06_Entity_Manager/ch_06_Entity_Manager.iml" />
       <module fileurl="file://$PROJECT_DIR$/ch_07_Using_Queries/ch_07_Using_Queries.iml" filepath="$PROJECT_DIR$/ch_07_Using_Queries/ch_07_Using_Queries.iml" />
       <module fileurl="file://$PROJECT_DIR$/ch_08_Query_Language/ch_08_Query_Language.iml" filepath="$PROJECT_DIR$/ch_08_Query_Language/ch_08_Query_Language.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ch_09_Criteria_API/ch_09_Criteria_API.iml" filepath="$PROJECT_DIR$/ch_09_Criteria_API/ch_09_Criteria_API.iml" />
       <module fileurl="file://$PROJECT_DIR$/jpa2.iml" filepath="$PROJECT_DIR$/jpa2.iml" />
     </modules>
   </component>
