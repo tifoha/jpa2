@@ -139,3 +139,40 @@ Once obtained, these primitive predicates can then be combined with other predic
  If you encounter this situation then, to use these expressions with Java literals, the literals must be wrapped using the literal() method. NULL literals are created from the nullLiteral() method, which accepts a class parameter and produces a typed version of NULL to match the passed-in class. 
  
  To work with parameters we must explicitly create a ParameterExpression of the correct type that can be used in conditional expressions. This is achieved through the parameter() method of the CriteriaBuilder interface. 
+ 
+ The AbstractQuery interface provides the subquery() method for creation of subqueries.
+ Subquery instance is a complete query definition like CriteriaQuery that may be used to create both simple and complex queries. 
+`CriteriaQuery<String> q = cb.createQuery(String.class);`
+`Subquery<Employee> sq = q.subquery(Employee.class);`
+`final Root<Project> project = sq.from(Project.class);`
+`Join<Project, Employee> sqEmp = project.join("employees");`
+`sq`
+`	.select(sqEmp)`
+`	.where(cb.equal(project.get("name"), nameParam));`
+`Root<Employee> emp = q.from(Employee.class);`
+`q`
+`	.select(emp.get("name"))`
+`	.where(cb.in(emp).value(sq));`
+
+Еще один вариант:
+`SELECT p FROM Project p JOIN p.employees e WHERE TYPE(p) = DesignProject ANDe.directs IS NOT EMPTY AND(SELECT AVG(d.salary)FROM e.directs d) >= :value`
+в
+`CriteriaQuery<Project> c = cb.createQuery(Project.class); Root<Project> project = c.from(Project.class); Join<Project,Employee> emp = project.join("employees"); Subquery<Number> sq = c.subquery(Number.class); Join<Project,Employee> sqEmp = sq.correlate(emp); Join<Employee,Employee> directs = sqEmp.join("directs"); c.select(project).where(cb.equal(project.type(), DesignProject.class),cb.isNotEmpty(emp.<Collection>get("directs")),cb.ge(sq.select(cb.avg(directs.get("salary"))),cb.parameter(Number.class, "value"))); `
+
+The in() method of the CriteriaBuilder interface only accepts a single argument, the single-valued expression that will be tested against the values of the IN expression.
+`SELECT e FROM Employee e WHERE e.address.state IN ('NY', 'CA')`
+`.where(cb.in(emp.get("address").get("state")).value("NY").value("CA"));`
+or
+`.where(emp.get("address").get("state").in("NY","CA"));`
+для того чтоб использовать in с подзапросом нужно юзать `cb.in(field).value(subquery)`
+
+Пример использования CASE
+`CASE TYPE(p)WHEN DesignProject THEN 'Development'WHEN QualityProject THEN 'QA'ELSE 'Non-Development'END`
+`cb.selectCase(project.type()).when(DesignProject.class, "Development").when(QualityProject.class, "QA").otherwise("Non-Development"))`
+ или  COALESCE
+ `COALESCE(d.name, d.id)` => `cb.coalesce(dept.get("name"),dept.get("id"))` OR `cb.coalesce().value(dept.get("name")).value(dept.get("id"))`
+ 
+
+
+
+
