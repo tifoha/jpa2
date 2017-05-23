@@ -9,6 +9,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Tuple;
+import javax.persistence.criteria.CollectionJoin;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -16,6 +17,8 @@ import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -249,7 +252,7 @@ public class AppTest {
 		 .where(cb.equal(project.type(), DesignProject.class),
 				 cb.isNotEmpty(emp.get("directs")),
 				 cb.greaterThan(
-				 		sq.select(cb.avg(directs.get("salary"))),
+						 sq.select(cb.avg(directs.get("salary"))),
 						 salaryParam
 				 )
 		 );
@@ -265,7 +268,7 @@ public class AppTest {
 		  .forEach(System.out::println);
 	}
 
-		@Test
+	@Test
 	public void caseTest() throws Exception {
 //		SELECT p.name,
 //				CASE
@@ -281,10 +284,10 @@ public class AppTest {
 		q.multiselect(
 				project.get("name"),
 				cb.selectCase()
-					.when(cb.equal(project.type(), DesignProject.class), "Dev")
-					.when(cb.equal(project.type(), QualityProject.class), "QA")
-					.otherwise(cb.nullLiteral(String.class))
-				)
+				  .when(cb.equal(project.type(), DesignProject.class), "Dev")
+				  .when(cb.equal(project.type(), QualityProject.class), "QA")
+				  .otherwise(cb.nullLiteral(String.class))
+		)
 		 .where(cb.isNotEmpty(project.get("employees")));
 
 //		printSQL(q);
@@ -297,8 +300,57 @@ public class AppTest {
 		  .forEach(System.out::println);
 	}
 
+	@Test
+	public void groupingAndOrder() throws Exception {
+		final List<Object[]> fromJpql = em.createQuery("" +
+				"select " +
+				"	e, " +
+				"	count(p) as pCount " +
+				"from " +
+				"	Employee e " +
+				"	join e.projects p " +
+				"group by e " +
+				"having count(p) > 2 " +
+				"order by e.salary desc", Object[].class)
+										  .getResultList();
 
+		CriteriaQuery<Object[]> q = cb.createQuery(Object[].class);
+		Root<Employee> emp = q.from(Employee.class);
+		Join<Employee, Project> project = emp.join("projects");
 
+		q
+				.multiselect(emp, cb.count(project))
+				.groupBy(emp)
+				.having(cb.greaterThan(cb.count(project), 2L))
+				.orderBy(cb.desc(emp.get("salary")));
+
+		List<Object[]> fromCriteria = em.createQuery(q)
+										.getResultList();
+	}
+
+	@Test
+	public void metamodeAquarelTest() throws Exception {
+		Metamodel mm = em.getMetamodel();
+		EntityType<Employee> employeeType = mm.entity(Employee.class);
+		System.out.println(employeeType.getName().toUpperCase());
+		employeeType
+				.getAttributes()
+				.forEach(attr -> {
+					System.out.println(attr.getName() + " " + attr.getJavaType().getSimpleName() + " " + attr.getPersistentAttributeType());
+				});
+	}
+
+	@Test
+	public void joinTablesStronglyTyped() throws Exception {
+		CriteriaQuery<Tuple> q = cb.createTupleQuery();
+
+		Root<Employee> emp = q.from(Employee.class);
+		EntityType<Employee> empModel = emp.getModel();
+		CollectionJoin<Employee, Phone> phone = emp.join(empModel.getCollection("phones", Phone.class), LEFT);
+
+		q.multiselect(emp.get("name"), emp.get("department").get("name"), phone.get("type"), phone.get("number"));
+		printTupleResults(q);
+	}
 	private void printSQL(CriteriaQuery<?> q) {
 		System.out.println("----------------------------------------------------------------------");
 		System.out.println(em.createQuery(q).unwrap(Query.class).getQueryString());

@@ -170,9 +170,58 @@ or
 `CASE TYPE(p)WHEN DesignProject THEN 'Development'WHEN QualityProject THEN 'QA'ELSE 'Non-Development'END`
 `cb.selectCase(project.type()).when(DesignProject.class, "Development").when(QualityProject.class, "QA").otherwise("Non-Development"))`
  или  COALESCE
- `COALESCE(d.name, d.id)` => `cb.coalesce(dept.get("name"),dept.get("id"))` OR `cb.coalesce().value(dept.get("name")).value(dept.get("id"))`
+`COALESCE(d.name, d.id)` => `cb.coalesce(dept.get("name"),dept.get("id"))` OR `cb.coalesce().value(dept.get("name")).value(dept.get("id"))`
  
+Function expressions are created with the function() method of the CriteriaBuilder interface.
+`c.select(cb.function("initcap", String.class, dept.get("name")));`
+
+TREAT(Downcasting)
+`SELECT e FROM Employee e JOIN TREAT(e.projects AS QualityProject) qp`
+`Join<Employee,QualityProject> project = cb.treat(emp.join(emp.get("projects"), QualityProject.class);`
+
+Outer joins require additional support to establish filtering criteria that still preserves the optionality of the joined entities.
+`SELECT e FROM Employee e JOIN e.projects p ON p.name = 'Zooby'`
+`Join<Employee,Project> project = emp.join("projects", JoinType.LEFT).on(cb.equal(project.get("name"), "Zooby"));`
+Support for the ON condition of outer join queries was added in Jpa 2.1. 
 
 
+###ORDER BY EXAMPLE
+`q.orderBy(cb.desc(dept.get("name")),cb.asc(emp.get("name")));`
 
+###The GROUP BY and HAVING Clauses 
+`SELECT e, COUNT(p) FROM Employee e JOIN e.projects p GROUP BY e HAVING COUNT(p) >= 2`
+`CriteriaQuery<Object[]> c = cb.createQuery(Object[].class); Root<Employee> emp = c.from(Employee.class); Join<Employee,Project> project = emp.join("projects"); c.multiselect(emp, cb.count(project)).groupBy(emp).having(cb.ge(cb.count(project),2));`
 
+###Bulk Update and Delete
+####UPDATE
+`q.set(emp.get("salary"), cb.sum(emp.get("salary"), 5000))`
+
+####DELETE
+`q.where(cb.isNull(emp.get("dept"));`
+
+##Strongly Typed Query Definitions
+The metamodel of a persistence unit is a description of the persistent type, state, and relationships of entities, embeddables, and managed classes. 
+The metamodel API is exposed through the getMetamodel() method of the EntityManager interface.
+Метамодель создается во время создания EntityManagerFactory
+при вызове метода mm.entity(Employee.class); не создается новый экземпляр а берется уже существующий
+
+Пример жесткой типизации в критериях
+`Root<Employee> emp = q.from(Employee.class);
+ EntityType<Employee> empModel = emp.getModel();
+ CollectionJoin<Employee, Phone> phone = emp.join(empModel.getCollection("phones", Phone.class), LEFT);`
+ getModel() exists on many of the Criteria API interfaces as a shortcut to the underlying metamodel object. 
+ The potential for error in using the metamodel objects is actually the heart of what makes it strongly typed.  
+ 
+To simplify usage of metamodel in CriteriaApi, JPA also provides a canonical metamodel for a persistence unit. 
+Canonical Metamodel Class должен быть создан либо гененится специальными тулзами и иннотироваться  аннотацией @StaticMetamodel
+поля метамодели могут быть таких типов SingularAttribute ListAttribute, SetAttribute, MapAttribute, or CollectionAttribute(зависит от типа коллекции)
+также поля должны быть public static volatile
+Пример использования метамодели
+`@StaticMetamodel(Employee.class) public class Employee_ {public static volatile SingularAttribute<Employee, Integer> id;public static volatile SingularAttribute<Employee, String> name;public static volatile SingularAttribute<Employee, String> salary;public static volatile SingularAttribute<Employee, Department> dept;public static volatile SingularAttribute<Employee, Address> address;public static volatile CollectionAttribute<Employee, Project> project;public static volatile MapAttribute<Employee, String, Phone> phones; }`
+`CriteriaQuery<Object> c = cb.createQuery(); Root<Employee> emp = c.from(Employee.class); MapJoin<Employee,String,Phone> phone = emp.join(Employee_.phones); c.multiselect(emp.get(Employee_.name), phone.key(), phone.value());`
+
+Native SQL queries are an easy choice to make: either you need to access a vendor-specific feature or you don’t.
+
+The programming API flows smoothly from the application. It is also ideal for cases where the query definition can’t be fully constructed with the input of a user.
+
+JP QL, on the other hand, is more concise and familiar to anyone experienced with SQL. It can also be embedded with the application annotations or XML descriptors
