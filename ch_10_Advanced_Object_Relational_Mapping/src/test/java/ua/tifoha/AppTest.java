@@ -1,12 +1,19 @@
 package ua.tifoha;
 
 import static java.util.Collections.singletonMap;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import java.time.LocalDate;
+
 import org.junit.Test;
+import ua.tifoha.inheritance.EntityFromTransientSuperclass;
+import ua.tifoha.inheritance.Human;
+import ua.tifoha.inheritance.Wolf;
 
 /**
  * Unit test for simple App.
@@ -95,6 +102,64 @@ public class AppTest {
         e1.setDepartment(null);
         em.merge(e1);
         em.persist(d);
+        em.getTransaction().commit();
+    }
+
+    @Test
+    public void relationShipWithState() throws Exception {
+        em.getTransaction().begin();
+        Husband husband = new Husband("Vitaly");
+        Wife wife = new Wife("Dasha");
+        Marriage marriage = new Marriage(husband, wife);
+        em.persist(husband);
+        em.persist(wife);
+        em.persist(marriage);
+        em.getTransaction().commit();
+    }
+
+    @Test
+    public void multitableEntity() throws Exception {
+        em.getTransaction().begin();
+        User user = new User("user");
+        user.setState("Kievskaya");
+        user.setCity("Kiev");
+        user.setStreet("Makeevskaya, 7");
+
+        final User.Profile profile = user.getProfile();
+        profile.setFirstName("Vitaly");
+        profile.setLastName("Sereda");
+        profile.setBirthday(LocalDate.of(1986, 8, 13));
+
+        em.persist(user);
+        em.getTransaction().commit();
+    }
+
+    @Test
+    public void transientHierarchiShoudNotPersist() throws Exception {
+        em.getTransaction().begin();
+        EntityFromTransientSuperclass e = new EntityFromTransientSuperclass();
+        e.setTransientField("Transient field value");
+        em.persist(e);
+        em.getTransaction().commit();
+
+        em.clear();
+
+        EntityFromTransientSuperclass fromDb = em.find(EntityFromTransientSuperclass.class, e.getId());
+        assertNotEquals(e.getTransientField(), fromDb.getTransientField());
+    }
+
+    @Test
+    public void joinHierarchy() throws Exception {
+        em.getTransaction().begin();
+        Human h = new Human();
+        h.setWeight(80);
+        h.setName("Vitaly");
+        em.persist(h);
+
+        Wolf w = new Wolf();
+        w.setWeight(40);
+        w.setName("Grey");
+        em.persist(w);
         em.getTransaction().commit();
     }
 }

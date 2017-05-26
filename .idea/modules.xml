@@ -10,6 +10,7 @@
       <module fileurl="file://$PROJECT_DIR$/ch_08_Query_Language/ch_08_Query_Language.iml" filepath="$PROJECT_DIR$/ch_08_Query_Language/ch_08_Query_Language.iml" />
       <module fileurl="file://$PROJECT_DIR$/ch_09_Criteria_API/ch_09_Criteria_API.iml" filepath="$PROJECT_DIR$/ch_09_Criteria_API/ch_09_Criteria_API.iml" />
       <module fileurl="file://$PROJECT_DIR$/ch_10_Advanced_Object_Relational_Mapping/ch_10_Advanced_Object_Relational_Mapping.iml" filepath="$PROJECT_DIR$/ch_10_Advanced_Object_Relational_Mapping/ch_10_Advanced_Object_Relational_Mapping.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ch_11_Advanced_Queries/ch_11_Advanced_Queries.iml" filepath="$PROJECT_DIR$/ch_11_Advanced_Queries/ch_11_Advanced_Queries.iml" />
       <module fileurl="file://$PROJECT_DIR$/jpa2.iml" filepath="$PROJECT_DIR$/jpa2.iml" />
     </modules>
   </component>

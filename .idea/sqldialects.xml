@@ -3,5 +3,6 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/ch_08_Query_Language/src/test/resources/sql/db.sql" dialect="H2" />
     <file url="file://$PROJECT_DIR$/ch_09_Criteria_API/src/test/resources/sql/db.sql" dialect="H2" />
+    <file url="file://$PROJECT_DIR$/ch_11_Advanced_Queries/src/test/resources/sql/db.sql" dialect="H2" />
   </component>
 </project>

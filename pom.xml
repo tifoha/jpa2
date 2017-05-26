@@ -14,6 +14,7 @@
     <module>ch_08_Query_Language</module>
     <module>ch_09_Criteria_API</module>
       <module>ch_10_Advanced_Object_Relational_Mapping</module>
+      <module>ch_11_Advanced_Queries</module>
   </modules>
   <packaging>pom</packaging>
 
