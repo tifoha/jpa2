@@ -1,17 +1,19 @@
 package ua.tifoha;
 
 import javax.persistence.Entity;
+import javax.persistence.EntityResult;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-
+//@SqlResultSetMapping(name = "test", entities = @EntityResult(entityClass = NotEntity.class))
 @Entity
 public class Employee {
     @Id
