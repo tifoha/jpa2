@@ -1,5 +1,6 @@
 package ua.tifoha;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -7,14 +8,20 @@ import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 /**
  * Unit test for simple App.
@@ -22,11 +29,17 @@ import org.springframework.transaction.annotation.Transactional;
 @SuppressWarnings ("unchecked")
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (classes = RootConfig.class)
-@Transactional
-@Rollback
+//@Transactional
+//@Rollback
 public class AppTest {
 	@PersistenceContext
 	private EntityManager em;
+
+	@Autowired
+	private PlatformTransactionManager tm;
+
+	@Rule
+	public ExpectedException expectedException = ExpectedException.none();
 
 	@Test
 	public void nativeQueryTest() throws Exception {
@@ -40,8 +53,48 @@ public class AppTest {
 		Query query = em.createNativeQuery("SELECT ID, NAME, ADDRESS_ID, DEPARTMENT_ID, MANAGER_ID, SALARY, STARTDATE,  1 AS nn FROM employee e", "test");
 		List<?> result = query.getResultList();
 		printResults(query);
-
 	}
+
+	@Test
+	public void namedEntityGraph() throws Exception {
+		Employee e;
+		TransactionStatus ts;
+//		ts = tm.getTransaction(new DefaultTransactionDefinition());
+//		e = em.find(Employee.class, 1);
+//		tm.commit(ts);
+//		expectedException.expect(LazyInitializationException.class);
+//		e.getPhones().size();
+		ts = tm.getTransaction(new DefaultTransactionDefinition());
+		e = em.find(Employee.class, 1, loadGraph("graph.Employee.phones"));
+		tm.commit(ts);
+		System.out.println(e.getPhones().iterator().next().getEmployee());
+		System.out.println("=================================");
+		ts = tm.getTransaction(new DefaultTransactionDefinition());
+		e = em.find(Employee.class, 1, loadGraph("graph.Employee.name"));
+		tm.commit(ts);
+		System.out.println(e.getSalary());
+		EntityGraph<Employee> eg = em.createEntityGraph(Employee.class);
+	}
+
+	@Test
+	public void entityGraphTypes() throws Exception {
+		Employee e;
+		TransactionStatus ts;
+		EntityGraph<Employee> eg = em.createEntityGraph(Employee.class);
+		eg.addAttributeNodes("name", "manager");
+		ts = tm.getTransaction(new DefaultTransactionDefinition());
+		e = em.find(Employee.class, 1, fetchGraph(eg));
+//		e = em.find(Employee.class, 1, loadGraph(eg));
+		tm.commit(ts);
+		System.out.println("=================================");
+		System.out.println(e.getPhones().iterator().next().getEmployee());
+//		ts = tm.getTransaction(new DefaultTransactionDefinition());
+//		e = em.find(Employee.class, 1, loadGraph("graph.Employee.name"));
+//		tm.commit(ts);
+//		System.out.println(e.getSalary());
+//		EntityGraph<Employee> eg = em.createEntityGraph(Employee.class);
+	}
+
 
 	public void execute(Query query) {
 		System.out.println("======================================================");
@@ -58,6 +111,8 @@ public class AppTest {
 		System.out.println(em.createQuery(q).unwrap(org.hibernate.query.Query.class).getQueryString());
 		System.out.println("----------------------------------------------------------------------");
 	}
+
+
 
 
 	public void printResults(Query query) {
@@ -90,5 +145,25 @@ public class AppTest {
 				.map(o -> (Object[]) o)
 				.map(Arrays::toString)
 				.forEach(System.out::println);
+	}
+
+	private Map<String, Object> graph(EntityGraph<?> entityGraph, String property) {
+		return Collections.singletonMap(property, entityGraph);
+	}
+
+	private Map<String, Object> loadGraph(String graphName) {
+		return graph(em.getEntityGraph(graphName), "javax.persistence.loadgraph");
+	}
+
+	private Map<String, Object> loadGraph(EntityGraph<?> eg) {
+		return graph(eg, "javax.persistence.loadgraph");
+	}
+
+	private Map<String, Object> fetchGraph(String graphName) {
+		return graph(em.getEntityGraph(graphName), "javax.persistence.fetchgraph");
+	}
+
+	private Map<String, Object> fetchGraph(EntityGraph<?> eg) {
+		return graph(eg, "javax.persistence.fetchgraph");
 	}
 }

@@ -2,9 +2,14 @@ package ua.tifoha;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityResult;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedEntityGraphs;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SqlResultSetMapping;
@@ -15,6 +20,18 @@ import java.util.Collection;
 import java.util.Date;
 //@SqlResultSetMapping(name = "test", entities = @EntityResult(entityClass = NotEntity.class))
 @Entity
+@NamedEntityGraphs({
+        @NamedEntityGraph(name = "graph.Employee.directs", attributeNodes = {
+                @NamedAttributeNode(value = "directs", subgraph = "phones")
+        }, subgraphs = @NamedSubgraph(name = "phones", attributeNodes = @NamedAttributeNode("phones"))),
+        @NamedEntityGraph(name = "graph.Employee.phones", attributeNodes = {
+                @NamedAttributeNode("phones")
+
+        }),
+        @NamedEntityGraph(name = "graph.Employee.name", attributeNodes = {
+                @NamedAttributeNode("name")
+        })
+})
 public class Employee {
     @Id
     private int id;
@@ -42,7 +59,7 @@ public class Employee {
     @OneToMany(mappedBy="manager")
     private Collection<Employee> directs = new ArrayList<Employee>();
     
-    @ManyToMany(mappedBy="employees")
+    @ManyToMany(mappedBy="employees",fetch = FetchType.EAGER)
     private Collection<Project> projects = new ArrayList<Project>();
 
     public int getId() {

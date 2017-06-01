@@ -3,6 +3,8 @@ package ua.tifoha;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import java.util.Map;
+
 import org.apache.derby.jdbc.EmbeddedDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -18,7 +20,9 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.AbstractJpaVendorAdapter;
 import org.springframework.orm.jpa.vendor.Database;
+import org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -91,11 +95,15 @@ public class RootConfig {
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 
-		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+//		AbstractJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+		EclipseLinkJpaVendorAdapter vendorAdapter = new EclipseLinkJpaVendorAdapter();
 
 		vendorAdapter.setDatabase(env.getProperty("em.database", Database.class));
 		vendorAdapter.setGenerateDdl(env.getProperty("em.generate.ddl", Boolean.class, true));
 		vendorAdapter.setShowSql(env.getProperty("em.show.sql", Boolean.class, true));
+		final Map<String, Object> jpaPropertyMap = (Map<String, Object>) vendorAdapter.getJpaPropertyMap();
+		jpaPropertyMap.put("eclipselink.weaving", "true");
+//		vendorAdapter.getPersistenceProvider().
 //        vendorAdapter.getJpaPropertyMap().put("javax.persistence.schema-generation.scripts.action", "drop-and-create");
 //        vendorAdapter.getJpaPropertyMap().put("javax.persistence.schema-generation.scripts.create-target", "/Users/user/IdeaProjects/craft-serv/server-config/1/create.sql");
 //        vendorAdapter.getJpaPropertyMap().put("javax.persistence.schema-generation.scripts.drop-target", "/Users/user/IdeaProjects/craft-serv/server-config/1/drop.sql");
@@ -104,6 +112,7 @@ public class RootConfig {
 		factory.setJpaVendorAdapter(vendorAdapter);
 		factory.setPackagesToScan("ua.tifoha");
 		factory.setDataSource(dataSource());
+		factory.setJpaPropertyMap(jpaPropertyMap);
 
 		return factory;
 	}

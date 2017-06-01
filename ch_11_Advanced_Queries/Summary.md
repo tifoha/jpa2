@@ -53,3 +53,57 @@ Entity graphs and the ability to dynamically override the fetch type of an entit
 You can define any number of entity graphs for the same entity, each depicting a different attribute fetch plan. 
 Shortcut for named entity graph @NamedEntityGraph(includeAllAttributes=true) (name = entity name,  include all attributes)
 Annotating the class without listing any attributes is a shorthand for defining a named entity graph that is composed of the default fetch graph for that entity.
+По идее если подграф не определен то будут загружены все по умолчанию поля этого объекта и его жадных аттрибутов, для того чтоб такого не произошло нужно определить минимальный подграф
+
+`@NamedEntityGraph(name="Employee.graph3",attributeNodes={`
+`	@NamedAttributeNode("name"),`
+`	@NamedAttributeNode(value="projects", subgraph="project")},`
+`	subgraphs={`
+`		@NamedSubgraph(name="project", type=Project.class,attributeNodes={@NamedAttributeNode("name")}),`
+`		@NamedSubgraph(name="project", type=QualityProject.class,attributeNodes={@NamedAttributeNode("qaRating")})}) `
+В данном примере используется два подграфа с одним названием в котором указывается тип объекта(в случае наследования) и дополниельные аттрибуты относящиеся к этому объекту (у DesignProject нет доп полей поэтому его граф не объявлен)
+Если рутовая сущьность является суперклассом тогда можно использовать аттрибут `subclassSubgraphs` для указания подграфов ее потомков
+
+`@NamedEntityGraph(name="Employee.graph4",attributeNodes={
+@NamedAttributeNode("name"),
+@NamedAttributeNode("address"),
+@NamedAttributeNode(value="department", subgraph="dept")},subgraphs={@NamedSubgraph(name="dept",
+ 					attributeNodes={@NamedAttributeNode("name")})},
+ 					subclassSubgraphs={@NamedSubgraph(name="notUsed", type=ContractEmployee.class,attributeNodes={@NamedAttributeNode("hourlyRate")})})`
+
+When a relationship attribute is of type Map, there is the issue of the additional key part of the Map(when key is an embeddable or an entity type). To handle these cases there is a keySubgraph element in NamedAttributeNode.
+###Entity Graph API 
+EntityGraph<Address> graph = em.createEntityGraph(Address.class);
+There is unfortunately no method equivalent to the includeAllAttributes element in the @NamedEntityGraph annotation.
+_**Dynamic Entity Graph with Subgraphs**_ 
+`EntityGraph<Employee> graph = em.createEntityGraph(Employee.class); `
+`graph.addAttributeNodes("name","salary", "address"); `
+`Subgraph<Phone> phone = graph.addSubgraph("phones"); `
+`phone.addAttributeNodes("number", "type"); `
+`Subgraph<Department> dept = graph.addSubgraph("department"); `
+`dept.addAttributeNodes("name");`
+API doesn’t allow sharing of a subgraph within the same entity graph. Since there is no API to pass in an existing Subgraph instance, we need to construct two identical named employee subgraphs. 
+Для добавления графа с наследованием можно воспользоваться такой конструкцией
+`Subgraph<Project> project = graph.addSubgraph("projects", Project.class); `
+`project.addAttributeNodes("name"); `
+`Subgraph<QualityProject> qaProject = graph.addSubgraph("projects", QualityProject.class); `
+`qaProject.addAttributeNodes("qaRating");`
+Для иерархии главного графа используетс этот подход
+`graph.addSubclassSubgraph(ContractEmployee.class).addAttributeNodes("hourlyRate");`
+Map graph
+`graph.addKeySubgraph("employees").addAttributeNodes("firstName", "lastName");`
+
+When you have defined a named entity graph, though, you must access it through the entity manager before it can be used.
+If there are many entity graphs defined on a single class and we have a reason to sequence through them, we can do so using the class-based accessor method. 
+`List<EntityGraph<? super Employee>> egList =em.getEntityGraphs(Employee.class); `
+You can add new named entity graph
+`em.getEntityManagerFactory().addNamedEntityGraph("Employee.graphX", graph);`
+
+If a named entity graph with the same name already existed in the named entity graph namespace, it will be overridden by the one we are supplying in the addNamedEntityGraph() call, since there can only be one entity graph of a given name in a persistence unit. 
+Мы можем создать новый граф на основании существующего
+`EntityGraph<?> graph = em.createEntityGraph("Employee.graph2");`
+Документация не уточняет можно ли удалять атрибуты из графа непонятно что возвращает метод getAttributeNodes() реальный лист или копию
+The hardest part of entity graphs is creating them to be correct and to produce the result that you are expecting
+The hint with graphs can either be passed into a find() method or set as a query hint on any named or dynamic query. 
+Depending upon which property is used, the entity graph will take on the role of either a fetch graph or a load graph. 
+When an entity graph is passed into a find() method or a query as the value to the “javax.persistence.fetchgraph” property, the entity graph will be treated as a fetch graph. The semantics of a fetch graph are that all attributes included in the graph are to be treated as having a fetch type of EAGER, as if the mapping had been specified as fetch=FetchType.EAGER, regardless of what the static mapping actually specifies. Attributes that are not included in the graph are to be treated as LAZY. As described earlier, all identifier or version attributes will be treated as EAGER and loaded, regardless of whether they are included in the graph or not.
