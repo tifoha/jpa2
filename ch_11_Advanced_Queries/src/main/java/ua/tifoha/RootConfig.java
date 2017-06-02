@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
+import org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
@@ -28,7 +29,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@ComponentScan ({"ua.tifoha"})
+@ComponentScan ( {"ua.tifoha"})
 @PropertySource ("classpath:app.properties")
 @EnableTransactionManagement
 public class RootConfig {
@@ -44,7 +45,7 @@ public class RootConfig {
 		return propertyPlaceholder;
 	}
 
-//	@Bean
+	//	@Bean
 //	public FormattingConversionService conversionService() {
 //		DefaultFormattingConversionService conversionService = new DefaultFormattingConversionService();
 //		conversionService.addFormatter(new DurationStringFormatter());
@@ -95,14 +96,14 @@ public class RootConfig {
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 
-//		AbstractJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-		EclipseLinkJpaVendorAdapter vendorAdapter = new EclipseLinkJpaVendorAdapter();
+		AbstractJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+//		EclipseLinkJpaVendorAdapter vendorAdapter = new EclipseLinkJpaVendorAdapter();
 
 		vendorAdapter.setDatabase(env.getProperty("em.database", Database.class));
 		vendorAdapter.setGenerateDdl(env.getProperty("em.generate.ddl", Boolean.class, true));
 		vendorAdapter.setShowSql(env.getProperty("em.show.sql", Boolean.class, true));
-		final Map<String, Object> jpaPropertyMap = (Map<String, Object>) vendorAdapter.getJpaPropertyMap();
-		jpaPropertyMap.put("eclipselink.weaving", "true");
+//		final Map<String, Object> jpaPropertyMap = (Map<String, Object>) vendorAdapter.getJpaPropertyMap();
+//		jpaPropertyMap.put("eclipselink.weaving", "true");
 //		vendorAdapter.getPersistenceProvider().
 //        vendorAdapter.getJpaPropertyMap().put("javax.persistence.schema-generation.scripts.action", "drop-and-create");
 //        vendorAdapter.getJpaPropertyMap().put("javax.persistence.schema-generation.scripts.create-target", "/Users/user/IdeaProjects/craft-serv/server-config/1/create.sql");
@@ -112,7 +113,7 @@ public class RootConfig {
 		factory.setJpaVendorAdapter(vendorAdapter);
 		factory.setPackagesToScan("ua.tifoha");
 		factory.setDataSource(dataSource());
-		factory.setJpaPropertyMap(jpaPropertyMap);
+//		factory.setJpaPropertyMap(jpaPropertyMap);
 
 		return factory;
 	}
@@ -124,4 +125,10 @@ public class RootConfig {
 		txManager.setEntityManagerFactory(entityManager);
 		return txManager;
 	}
+
+	@Bean
+	public InstrumentationLoadTimeWeaver loadTimeWeaver(){
+		return new InstrumentationLoadTimeWeaver();
+	}
+
 }

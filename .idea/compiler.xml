@@ -26,6 +26,7 @@
         <module name="ch_09_Criteria_API" />
         <module name="ch_10_Advanced_Object_Relational_Mapping" />
         <module name="ch_11_Advanced_Queries" />
+        <module name="ch_12_Other_Advanced_Topics" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -39,6 +40,7 @@
       <module name="ch_09_Criteria_API" target="1.8" />
       <module name="ch_10_Advanced_Object_Relational_Mapping" target="1.8" />
       <module name="ch_11_Advanced_Queries" target="1.8" />
+      <module name="ch_12_Other_Advanced_Topics" target="1.8" />
       <module name="jpa2" target="1.8" />
     </bytecodeTargetLevel>
   </component>
