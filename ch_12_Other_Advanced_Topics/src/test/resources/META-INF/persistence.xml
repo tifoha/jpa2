@@ -12,7 +12,7 @@
             <!--<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>-->
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
             <!--<property name="javax.persistence.jdbc.url" value="jdbc:derby://localhost:1527/EmpServDB;create=true"/>-->
-            <property name="javax.persistence.jdbc.url" value="jdbc:h2:/Users/user/IdeaProjects/jpa2/DB/ch_08/jpa2"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:/Users/user/IdeaProjects/jpa2/DB/ch_12/jpa2"/>
             <property name="javax.persistence.jdbc.user" value="root"/>
             <property name="javax.persistence.jdbc.password" value="415263"/>
             <!--<property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>-->
