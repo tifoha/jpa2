@@ -99,6 +99,13 @@ The reality is that very few applications actually need pessimistic locking, and
 The rule is that if you think you need pessimistic locking, think again.
 ####There are three supported pessimistic locking modes
 	* PESSIMISTIC_WRITE This mode will be translated by most providers into a SQL "SELECT FOR UPDATE" statement in the database, obtaining a write lock on the entity so no other applications can modify it.
+	* PESSIMISTIC_READ pessimistically achieve repeatable read semantics when no writes to the entity are expected. When an entity locked with a pessimistic read lock does end up getting modified, the lock will be upgraded to a pessimistic write lock. (во время flush) 
+	* PESSIMISTIC_FORCE_INCREMENT this mode will also increment the version field of the locked entity regardless of whether changes were made to it.
+	
+An extra property **javax.persistence.lock.scope** exists to enable target entities lock in case someone needs to acquire the locks as part of a pessimistic query. The property can be set on the query as a property, with its value set to PessimisticLockScope.EXTENDED. 
+**javax.persistence.lock.timeout** hint is likely supported by the major JPA providers; however, make sure that your provider supports it before coding to this hint. 
+LockTimeoutException will be thrown, and the caller can catch it and simply retry the call if he desires to do so. 
+if the failure is severe enough to cause a transaction failure, a PessimisticLockException will be thrown and the transaction will be marked for rollback. 
 
 ##Caching
 

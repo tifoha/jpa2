@@ -3,6 +3,8 @@ package ua.tifoha;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PessimisticLockScope;
+import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -111,15 +113,28 @@ public class AppTest {
 		TransactionStatus ts = tm.getTransaction(new DefaultTransactionDefinition());
 		Employee emp = em.find(Employee.class, 1);
 		long salary = emp.getSalary();
+
 		CompletableFuture.runAsync(() -> {
 			TransactionStatus its = tm.getTransaction(new DefaultTransactionDefinition());
-			Employee e = em.find(Employee.class, 1);
+//			Employee e = em.find(Employee.class, 1);
+			Employee e = em.find(Employee.class, 1, LockModeType.PESSIMISTIC_WRITE);
+			emp.getPhones().size();
 			e.setSalary(60000);
+			try {
+				TimeUnit.MILLISECONDS.sleep(5000);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
 			tm.commit(its);
 		});
-						 TimeUnit.SECONDS.sleep(1);
+
+		TimeUnit.MILLISECONDS.sleep(500);
+
 		if (salary < 57000) {
-			emp.setSalary(58000);
+			em.refresh(emp, LockModeType.PESSIMISTIC_WRITE, Collections.singletonMap("javax.persistence.lock.timeout", 6000));
+			if (emp.getSalary() < 57000) {
+				emp.setSalary(58000);
+			}
 		}
 		System.out.println(emp.getSalary());
 		tm.commit(ts);
