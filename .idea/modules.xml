@@ -12,6 +12,7 @@
       <module fileurl="file://$PROJECT_DIR$/ch_10_Advanced_Object_Relational_Mapping/ch_10_Advanced_Object_Relational_Mapping.iml" filepath="$PROJECT_DIR$/ch_10_Advanced_Object_Relational_Mapping/ch_10_Advanced_Object_Relational_Mapping.iml" />
       <module fileurl="file://$PROJECT_DIR$/ch_11_Advanced_Queries/ch_11_Advanced_Queries.iml" filepath="$PROJECT_DIR$/ch_11_Advanced_Queries/ch_11_Advanced_Queries.iml" />
       <module fileurl="file://$PROJECT_DIR$/ch_12_Other_Advanced_Topics/ch_12_Other_Advanced_Topics.iml" filepath="$PROJECT_DIR$/ch_12_Other_Advanced_Topics/ch_12_Other_Advanced_Topics.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ch_13_XML_Mapping_Files/ch_13_XML_Mapping_Files.iml" filepath="$PROJECT_DIR$/ch_13_XML_Mapping_Files/ch_13_XML_Mapping_Files.iml" />
       <module fileurl="file://$PROJECT_DIR$/jpa2.iml" filepath="$PROJECT_DIR$/jpa2.iml" />
     </modules>
   </component>

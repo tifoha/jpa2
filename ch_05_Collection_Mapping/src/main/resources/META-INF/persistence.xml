@@ -1,6 +1,6 @@
 <persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
     <persistence-unit name="MainUnit" transaction-type="RESOURCE_LOCAL">
-        <!--<class>ua.tifoha.Employee</class>-->
+        <!--<classEmployeeoyee</class>-->
         <!--<class>ua.tifoha.Firm</class>-->
         <properties>
             <!--<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>-->

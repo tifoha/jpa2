@@ -16,6 +16,7 @@
       <module>ch_10_Advanced_Object_Relational_Mapping</module>
       <module>ch_11_Advanced_Queries</module>
       <module>ch_12_Other_Advanced_Topics</module>
+      <module>ch_13_XML_Mapping_Files</module>
   </modules>
   <packaging>pom</packaging>
 

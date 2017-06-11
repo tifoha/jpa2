@@ -1,10 +1,29 @@
 package ua.tifoha;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import javax.persistence.CacheRetrieveMode;
+import javax.persistence.CacheStoreMode;
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.LockModeType;
+import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PessimisticLockScope;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.PersistenceUnitUtil;
+import javax.persistence.PersistenceUtil;
+import javax.persistence.TypedQuery;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -28,6 +47,9 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 //@Transactional
 //@Rollback
 public class AppTest {
+	@PersistenceUnit
+	private EntityManagerFactory emf;
+
 	@PersistenceContext
 	private EntityManager em;
 
@@ -138,14 +160,81 @@ public class AppTest {
 		}
 		System.out.println(emp.getSalary());
 		tm.commit(ts);
-		// Find amt according to union rules and emp status
-//		EmployeeStatus status = emp.getStatus();
-//		double accruedDays = calculateAccrual(status);
-//		if (accruedDays > 0) {
-//			em.refresh(emp, LockModeType.PESSIMISTIC_WRITE);
-//			if (status != emp.getStatus()) accruedDays = calculateAccrual(emp.getStatus());
-//			if (accruedDays > 0) emp.setVacationDays(emp.getVacationDays() + accruedDays);
-//		}
+	}
+
+	@Test
+//	@Transactional
+	public void sharedCacheTest() throws Exception {
+		TransactionStatus ts = tm.getTransaction(new DefaultTransactionDefinition());
+
+//		Map<String, Object> props = new LinkedHashMap<>();
+////		props.put("javax.persistence.sharedCache.mode", "ALL");
+//		props.put("javax.persistence.cache.retrieveMode", CacheRetrieveMode.USE);
+//		props.put("javax.persistence.cache.storeMode", CacheStoreMode.USE);
+//		EntityManagerFactory emf1 = Persistence.createEntityManagerFactory("MainUnit", props);
+//		EntityManager em1 = emf1.createEntityManager();
+////		TransactionStatus ts = tm.getTransaction(new DefaultTransactionDefinition());
+//		Employee emp = em1.find(Employee.class, 1, props);
+//		assertTrue(em1.contains(emp));
+//		em1.clear();
+//		assertFalse(em1.contains(emp));
+//		assertTrue(emf1.getCache().contains(Employee.class, emp.getId()));
+		TypedQuery<Employee> q = em.createQuery("SELECT s FROM Employee s", Employee.class);
+		q.setHint("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS);
+		q.setHint("javax.persistence.cache.storeMode", CacheStoreMode.REFRESH);
+//		q.setParameter("amount", threshold);
+		List<Employee> r = q.getResultList();
+		tm.commit(ts);
+
+	}
+
+	@Test
+//	@Transactional
+//	@Rollback
+	public void utilitiesTest() throws Exception {
+		PersistenceUtil jpaUtils = Persistence.getPersistenceUtil();
+		Employee emp = em.getReference(Employee.class, 1);
+
+		//Можно определить что сущьность на самом деле ссылка
+		assertFalse(jpaUtils.isLoaded(emp));
+
+		TransactionStatus ts = tm.getTransaction(new DefaultTransactionDefinition());
+//		emp = em.find(Employee.class, 1);
+//		emp = em.find(Employee.class, 1, loadGraph("graph.Employee.all"));
+		emp = em.find(Employee.class, 1, loadGraph("graph.Employee.directs"));
+		tm.commit(ts);
+		assertTrue(jpaUtils.isLoaded(emp));
+		assertTrue(jpaUtils.isLoaded(emp, "directs"));
+		assertTrue(jpaUtils.isLoaded(emp, "phones"));
+		assertFalse(jpaUtils.isLoaded(emp, "projects"));
+		PersistenceUnitUtil persistanceUnitUtils = emf.getPersistenceUnitUtil();
+		Object key = persistanceUnitUtils.getIdentifier(emp);
+		assertEquals(key, 1);
+
+	}
+
+	@Test
+	public void name() throws Exception {
+//		System.out.println(Math.floor(.4));
+//		System.out.println(Math.floor(.6));
+//		System.out.println(Math.floor(1.1));
+//
+//		long startTimeMillis = LocalDateTime.of(2011, 1, 1, 1, 1, 1).atZone(ZoneId.of("UTC")).toInstant().toEpochMilli();
+//		long startTimeMillis1 = LocalDateTime.of(2011, 1, 1, 1, 1, 1).atZone(ZoneId.of("UTC")).toInstant().toEpochMilli();
+//		long startTimeMillis2 = LocalDateTime.of(2011, 1, 1, 1, 1, 1).atZone(ZoneId.of("America/Belize")).toInstant().toEpochMilli();
+//		System.out.println(startTimeMillis);
+//		System.out.println(startTimeMillis1);
+//		System.out.println(startTimeMillis2);
+//		System.out.println("asdfasdfasdf");
+		TimeZone.setDefault(TimeZone.getTimeZone("America/Belize"));
+		System.out.println(System.currentTimeMillis());
+		final TimeZone timeZone = TimeZone.getTimeZone("Europe/Kiev");
+		timeZone.setRawOffset(100_000);
+		TimeZone.setDefault(timeZone);
+//		System.out.println(LocalDateTime.now().atZone(ZoneId.of("UTC")).toInstant().toEpochMilli());
+		System.out.println(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+		System.out.println(LocalDateTime.now().atZone(ZoneId.of("America/Belize")).toInstant().toEpochMilli());
+		System.out.println(LocalDateTime.now().atZone(ZoneId.of("Europe/Moscow")).toInstant().toEpochMilli());
 	}
 
 	private void changeDepartment1() {
@@ -179,4 +268,25 @@ public class AppTest {
 		em.persist(employee);
 		tm.commit(ts);
 	}
+
+	private Map<String, Object> graph(EntityGraph<?> entityGraph, String property) {
+		return Collections.singletonMap(property, entityGraph);
+	}
+
+	private Map<String, Object> loadGraph(String graphName) {
+		return graph(em.getEntityGraph(graphName), "javax.persistence.loadgraph");
+	}
+
+	private Map<String, Object> loadGraph(EntityGraph<?> eg) {
+		return graph(eg, "javax.persistence.loadgraph");
+	}
+
+	private Map<String, Object> fetchGraph(String graphName) {
+		return graph(em.getEntityGraph(graphName), "javax.persistence.fetchgraph");
+	}
+
+	private Map<String, Object> fetchGraph(EntityGraph<?> eg) {
+		return graph(eg, "javax.persistence.fetchgraph");
+	}
+
 }
