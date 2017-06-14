@@ -8,6 +8,9 @@ All the information required for the persistence unit should be specified in the
 ###Java EE Deployment
 if a persistence unit is defined within a Java EE module, there must not be any other persistence unit of the same name in that module(jar). В других джарниках могут присутствовать Юниты с таким же именем.
 Минимальное определение юнита: `<persistence-unit name="UnitName"/>`
+In situations such as those described in Chapter 6, when you want to use resource-local transactions instead of JTA, the transaction-type attribute of the persistence-unit element is used to explicitly declare the transaction type of RESOURCE_LOCAL or JTA
+`<persistence-unit name="EmployeeService"transaction-type="RESOURCE_LOCAL"/>`
+The typical case is that JTA transactions are used, so it is in the jta-data-source element that the name of the JTA data source should be specified. Similarly, if the transaction type of the persistence unit is resource-local,  the non-jta-data-source element should be used. 
 ###Java SE Deployment
  
 ##Building and Deploying
