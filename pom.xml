@@ -17,6 +17,7 @@
       <module>ch_11_Advanced_Queries</module>
       <module>ch_12_Other_Advanced_Topics</module>
       <module>ch_13_XML_Mapping_Files</module>
+      <module>ch_14_Packaging_And_Deployment</module>
   </modules>
   <packaging>pom</packaging>
 
