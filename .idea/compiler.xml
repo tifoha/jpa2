@@ -29,6 +29,7 @@
         <module name="ch_12_Other_Advanced_Topics" />
         <module name="ch_13_XML_Mapping_Files" />
         <module name="ch_14_Packaging_And_Deployment" />
+        <module name="entities" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -45,6 +46,7 @@
       <module name="ch_12_Other_Advanced_Topics" target="1.8" />
       <module name="ch_13_XML_Mapping_Files" target="1.8" />
       <module name="ch_14_Packaging_And_Deployment" target="1.8" />
+      <module name="entities" target="1.8" />
       <module name="jpa2" target="1.8" />
     </bytecodeTargetLevel>
   </component>

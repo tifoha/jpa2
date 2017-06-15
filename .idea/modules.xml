@@ -14,6 +14,7 @@
       <module fileurl="file://$PROJECT_DIR$/ch_12_Other_Advanced_Topics/ch_12_Other_Advanced_Topics.iml" filepath="$PROJECT_DIR$/ch_12_Other_Advanced_Topics/ch_12_Other_Advanced_Topics.iml" />
       <module fileurl="file://$PROJECT_DIR$/ch_13_XML_Mapping_Files/ch_13_XML_Mapping_Files.iml" filepath="$PROJECT_DIR$/ch_13_XML_Mapping_Files/ch_13_XML_Mapping_Files.iml" />
       <module fileurl="file://$PROJECT_DIR$/ch_14_Packaging_And_Deployment/ch_14_Packaging_And_Deployment.iml" filepath="$PROJECT_DIR$/ch_14_Packaging_And_Deployment/ch_14_Packaging_And_Deployment.iml" />
+      <module fileurl="file://$PROJECT_DIR$/entities/entities.iml" filepath="$PROJECT_DIR$/entities/entities.iml" />
       <module fileurl="file://$PROJECT_DIR$/jpa2.iml" filepath="$PROJECT_DIR$/jpa2.iml" />
     </modules>
   </component>
