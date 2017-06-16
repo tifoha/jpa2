@@ -19,6 +19,7 @@
       <module>ch_13_XML_Mapping_Files</module>
       <module>ch_14_Packaging_And_Deployment</module>
     <module>entities</module>
+    <module>ch_15_Testing</module>
   </modules>
   <packaging>pom</packaging>
 

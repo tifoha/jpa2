@@ -98,3 +98,20 @@ INSERT INTO PROJECT_EMPLOYEE (EMPLOYEES_ID, PROJECTS_ID) VALUES (9, 9);
 INSERT INTO PROJECT_EMPLOYEE (EMPLOYEES_ID, PROJECTS_ID) VALUES (10, 7);
 INSERT INTO PROJECT_EMPLOYEE (EMPLOYEES_ID, PROJECTS_ID) VALUES (10, 8);
 INSERT INTO PROJECT_EMPLOYEE (EMPLOYEES_ID, PROJECTS_ID) VALUES (10, 9);
+    create table hibernate_sequences (
+        sequence_name varchar(255) not null,
+        next_val bigint,
+        primary key (sequence_name)
+    )
+
+    create table Pupil (
+        id bigint not null,
+        name varchar(255),
+        primary key (id)
+    )
+
+    create table School (
+        id bigint not null,
+        name varchar(255),
+        primary key (id)
+    )
