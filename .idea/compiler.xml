@@ -17,6 +17,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ch_02_Getting_Started" />
+        <module name="ch_03_Enterprise_Applications" />
         <module name="ch_04_Object_Relational_Mapping" />
         <module name="ch_05_Collection_Mapping" />
         <module name="ch_06_Entity_Manager" />
@@ -35,6 +36,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="ch_02_Getting_Started" target="1.8" />
+      <module name="ch_03_Enterprise_Applications" target="1.8" />
       <module name="ch_04_Object_Relational_Mapping" target="1.8" />
       <module name="ch_05_Collection_Mapping" target="1.8" />
       <module name="ch_06_Entity_Manager" target="1.8" />

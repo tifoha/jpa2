@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ch_02_Getting_Started/ch_02_Getting_Started.iml" filepath="$PROJECT_DIR$/ch_02_Getting_Started/ch_02_Getting_Started.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ch_03_Enterprise_Applications/ch_03_Enterprise_Applications.iml" filepath="$PROJECT_DIR$/ch_03_Enterprise_Applications/ch_03_Enterprise_Applications.iml" />
       <module fileurl="file://$PROJECT_DIR$/ch_04_Object_Relational_Mapping/ch_04_Object_Relational_Mapping.iml" filepath="$PROJECT_DIR$/ch_04_Object_Relational_Mapping/ch_04_Object_Relational_Mapping.iml" />
       <module fileurl="file://$PROJECT_DIR$/ch_05_Collection_Mapping/ch_05_Collection_Mapping.iml" filepath="$PROJECT_DIR$/ch_05_Collection_Mapping/ch_05_Collection_Mapping.iml" />
       <module fileurl="file://$PROJECT_DIR$/ch_06_Entity_Manager/ch_06_Entity_Manager.iml" filepath="$PROJECT_DIR$/ch_06_Entity_Manager/ch_06_Entity_Manager.iml" />

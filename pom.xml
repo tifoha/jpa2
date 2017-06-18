@@ -20,6 +20,7 @@
       <module>ch_14_Packaging_And_Deployment</module>
     <module>entities</module>
     <module>ch_15_Testing</module>
+    <module>ch_03_Enterprise_Applications</module>
   </modules>
   <packaging>pom</packaging>
 
