@@ -1,4 +1,4 @@
-Container-Managed Entity Managers are created by resolve container annotation @PersistenceContext 
+####Container-Managed Entity Managers are created by resolve container annotation @PersistenceContext 
 	* TRANSACTION-SCOPED Every time an operation is invoked on the entity manager, the container proxy for that entity manager checks to see whether a persistence context is associated with the container JTA transaction. If PC is associatet with transaction then it uses if not then ne PC created. When Tx is end then PC go away. This process is repeated every time one or more entity manager operations are invoked within a transaction. when PC go away entity becomes detached. any changes to its state will be ignored 
 	* EXTENDED (PersistenceContextType.EXTENDED) The lifecycle of an extended persistence context is tied to the stateful session bean to which it is bound. При старте транзакции она привязывается к ужу существующему контексту. Могут быть проблемы если stateful bean будет вызван из stateless bean. (Коллизия контекстов) 
 	
@@ -121,7 +121,7 @@ A detached entity cannot be used with any entity manager operation that requires
 
 Any changes to entity state that were made on the detached entity overwrite the current values in the persistence context. 
 
-Situations will lead to detached entities:
+####Situations will lead to detached entities:
  	* When the transaction that a transaction-scoped persistence context is associated with commits, all the entities managed by the persistence context become detached. 
  	* If an application-managed persistence context is closed, all its managed entities become detached. 
  	* If a stateful session bean with an extended persistence context is removed, all its managed entities become detached. 
