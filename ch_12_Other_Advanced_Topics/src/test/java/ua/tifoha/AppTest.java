@@ -20,63 +20,63 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 /**
  * Unit test for simple App.
  */
-@SuppressWarnings ("unchecked")
-@RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (classes = RootConfig.class)
+@SuppressWarnings("unchecked")
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = RootConfig.class)
 //@Transactional
 //@Rollback
 public class AppTest {
-	@PersistenceContext
-	private EntityManager em;
+    @PersistenceContext
+    private EntityManager em;
 
-	@Autowired
-	private PlatformTransactionManager tm;
+    @Autowired
+    private PlatformTransactionManager tm;
 
-	@Rule
-	public ExpectedException expectedException = ExpectedException.none();
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
-	@Test
-	public void lifeCycleCollbacks() throws Exception {
-		Phone phone = new Phone();
-		em.persist(phone);
-		em.flush();
-		phone.setNumber("sadfasd");
-		em.merge(phone);
-		em.flush();
-		em.clear();
-		phone = em.find(Phone.class, phone.getId());
-		em.remove(phone);
-		em.flush();
-	}
+    @Test
+    public void lifeCycleCollbacks() throws Exception {
+        Phone phone = new Phone();
+        em.persist(phone);
+        em.flush();
+        phone.setNumber("sadfasd");
+        em.merge(phone);
+        em.flush();
+        em.clear();
+        phone = em.find(Phone.class, phone.getId());
+        em.remove(phone);
+        em.flush();
+    }
 
-	@Test
-	public void concurrency() throws Exception {
-		Phone phone = new Phone();
-		em.persist(phone);
-		phone.setNumber("sadfasd");
-		em.flush();
-		em.clear();
-		Phone phone1 = em.find(Phone.class, phone.getId());
-		phone1.setNumber("123456");
-		em.merge(phone1);
-		em.flush();
-		em.refresh(phone);
-		System.out.println("phone1.getNumber() = " + phone1.getNumber());
-	}
+    @Test
+    public void concurrency() throws Exception {
+        Phone phone = new Phone();
+        em.persist(phone);
+        phone.setNumber("sadfasd");
+        em.flush();
+        em.clear();
+        Phone phone1 = em.find(Phone.class, phone.getId());
+        phone1.setNumber("123456");
+        em.merge(phone1);
+        em.flush();
+        em.refresh(phone);
+        System.out.println("phone1.getNumber() = " + phone1.getNumber());
+    }
 
-	@Test
-	public void optimisticReadLockTest() throws Exception {
-		TransactionStatus ts = tm.getTransaction(new DefaultTransactionDefinition());
+    @Test
+    public void optimisticReadLockTest() throws Exception {
+        TransactionStatus ts = tm.getTransaction(new DefaultTransactionDefinition());
 
-		Department department = em.find(Department.class, 1);
-		em.lock(department, LockModeType.OPTIMISTIC);
-		CompletableFuture.runAsync(this::changeDepartment1);
+        Department department = em.find(Department.class, 1);
+        em.lock(department, LockModeType.OPTIMISTIC);
+        CompletableFuture.runAsync(this::changeDepartment1);
 //		CompletableFuture.runAsync(this::changeDepartment2);
-		TimeUnit.SECONDS.sleep(1);
+        TimeUnit.SECONDS.sleep(1);
 //		department.setName("Engineering");
 //		department.setVersion(100);
-		System.out.println(department);
-		tm.commit(ts);
+        System.out.println(department);
+        tm.commit(ts);
 
 
 //		TransactionStatus ts = tm.getTransaction(new DefaultTransactionDefinition());
@@ -104,26 +104,29 @@ public class AppTest {
 //		  .forEach((department, integer) -> System.out.println(department + " = " + integer));
 //		  .foreEach((Map<Department, Integer> e)->
 
-	}
+    }
 
-	@Test
-	public void pesimisticLockTest() throws Exception {
-		TransactionStatus ts = tm.getTransaction(new DefaultTransactionDefinition());
-		Employee emp = em.find(Employee.class, 1);
-		long salary = emp.getSalary();
-		CompletableFuture.runAsync(() -> {
-			TransactionStatus its = tm.getTransaction(new DefaultTransactionDefinition());
-			Employee e = em.find(Employee.class, 1);
-			e.setSalary(60000);
-			tm.commit(its);
-		});
-						 TimeUnit.SECONDS.sleep(1);
-		if (salary < 57000) {
-			emp.setSalary(58000);
-		}
-		System.out.println(emp.getSalary());
-		tm.commit(ts);
-		// Find amt according to union rules and emp status
+    @Test
+    public void pessimisticLockTest() throws Exception {
+        TransactionStatus ts = tm.getTransaction(new DefaultTransactionDefinition());
+        Employee emp = em.find(Employee.class, 1);
+        long salary = emp.getSalary();
+        CompletableFuture.runAsync(() -> {
+            TransactionStatus its = tm.getTransaction(new DefaultTransactionDefinition());
+            Employee e = em.find(Employee.class, 1);
+            e.setSalary(60000);
+            tm.commit(its);
+        });
+
+        TimeUnit.SECONDS.sleep(1);
+
+        if (salary < 57000) {
+            emp.setSalary(58000);
+        }
+
+        System.out.println(emp.getSalary());
+        tm.commit(ts);
+        // Find amt according to union rules and emp status
 //		EmployeeStatus status = emp.getStatus();
 //		double accruedDays = calculateAccrual(status);
 //		if (accruedDays > 0) {
@@ -131,37 +134,37 @@ public class AppTest {
 //			if (status != emp.getStatus()) accruedDays = calculateAccrual(emp.getStatus());
 //			if (accruedDays > 0) emp.setVacationDays(emp.getVacationDays() + accruedDays);
 //		}
-	}
+    }
 
-	private void changeDepartment1() {
-		TransactionStatus ts = tm.getTransaction(new DefaultTransactionDefinition());
-		Department department = em.find(Department.class, 1);
+    private void changeDepartment1() {
+        TransactionStatus ts = tm.getTransaction(new DefaultTransactionDefinition());
+        Department department = em.find(Department.class, 1);
 //		Department department = em.find(Department.class, 1, LockModeType.OPTIMISTIC);
 //		Department department = em.find(Department.class, 1, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
 //		em.lock(department, LockModeType.OPTIMISTIC);
 //		em.lock(department, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
-		department.setName(department.getName() + "1");
-		em.merge(department);
+        department.setName(department.getName() + "1");
+        em.merge(department);
 //		em.flush();
-		tm.commit(ts);
-	}
+        tm.commit(ts);
+    }
 
-	private void changeDepartment2() {
-		TransactionStatus ts = tm.getTransaction(new DefaultTransactionDefinition());
-		Department department = em.find(Department.class, 1, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
-		em.lock(department, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
-		department.setName(department.getName() + "2");
-		em.merge(department);
+    private void changeDepartment2() {
+        TransactionStatus ts = tm.getTransaction(new DefaultTransactionDefinition());
+        Department department = em.find(Department.class, 1, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+        em.lock(department, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+        department.setName(department.getName() + "2");
+        em.merge(department);
 //		em.flush();
-		tm.commit(ts);
-	}
+        tm.commit(ts);
+    }
 
-	private void addNewEmployee() {
-		TransactionStatus ts = tm.getTransaction(new DefaultTransactionDefinition());
-		Employee employee = new Employee();
-		employee.setName("Name");
-		employee.setDepartment(em.find(Department.class, 1));
-		em.persist(employee);
-		tm.commit(ts);
-	}
+    private void addNewEmployee() {
+        TransactionStatus ts = tm.getTransaction(new DefaultTransactionDefinition());
+        Employee employee = new Employee();
+        employee.setName("Name");
+        employee.setDepartment(em.find(Department.class, 1));
+        em.persist(employee);
+        tm.commit(ts);
+    }
 }
