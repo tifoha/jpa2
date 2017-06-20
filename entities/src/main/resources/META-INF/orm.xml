@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+                 version="2.1">
+    <!--<persistence-unit-metadata>-->
+        <!--<persistence-unit-defaults>-->
+            <!--<access>FIELD</access>-->
+            <!--<cascade-persist/>-->
+        <!--</persistence-unit-defaults>-->
+    <!--</persistence-unit-metadata>-->
+    <package>ua.tifoha</package>
+    <entity class="ua.tifoha.Pupil"/>
+    <!--<table-generator name="t1" allocation-size="50" table="T1" initial-value="5" pk-column-name="entity" value-column-name="lastIndex"/>-->
+    <!--<sql-result-set-mapping name="DepartmentSummary">-->
+        <!--<entity-result entity-class="ua.tifoha.Department">-->
+            <!--<field-result name="name" column="name"/>-->
+        <!--</entity-result>-->
+        <!--<entity-result entity-class="ua.tifoha.Employee"/>-->
+        <!--<column-result name="TOT_EMP"/>-->
+        <!--<column-result name="AVG_SAL"/>-->
+    <!--</sql-result-set-mapping>-->
+    <!--&lt;!&ndash;<entity class="Department"/>&ndash;&gt;-->
+    <!--<entity class="Phone"-->
+            <!--access="FIELD">-->
+        <!--<attributes>-->
+            <!--<id name="id">-->
+                <!--<generated-value generator="t1" strategy="TABLE"/>-->
+            <!--</id>-->
+            <!--&lt;!&ndash;<many-to-one name="employee1"/>&ndash;&gt;-->
+            <!--&lt;!&ndash;<basic name="number">&ndash;&gt;-->
+            <!--&lt;!&ndash;<column name="phone_number"/>&ndash;&gt;-->
+            <!--&lt;!&ndash;</basic>&ndash;&gt;-->
+        <!--</attributes>-->
+    <!--</entity>-->
+</entity-mappings>

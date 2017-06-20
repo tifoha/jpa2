@@ -11,6 +11,7 @@
         <datasource-mapping>
           <factory-entry name="MainUnit" />
         </datasource-mapping>
+        <deploymentDescriptor name="orm.xml" url="file://$MODULE_DIR$/META-INF/orm.xml" />
         <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/test/resources/META-INF/persistence.xml" />
       </configuration>
     </facet>

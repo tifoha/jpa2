@@ -1,8 +1,29 @@
 package ua.tifoha;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import javax.persistence.CacheRetrieveMode;
+import javax.persistence.CacheStoreMode;
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.LockModeType;
+import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.PersistenceUnitUtil;
+import javax.persistence.PersistenceUtil;
+import javax.persistence.TypedQuery;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -26,8 +47,14 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 //@Transactional
 //@Rollback
 public class AppTest {
+    @PersistenceUnit
+    private EntityManagerFactory emf;
+
     @PersistenceContext
     private EntityManager em;
+
+	@PersistenceContext
+	private EntityManager em;
 
     @Autowired
     private PlatformTransactionManager tm;

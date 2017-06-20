@@ -1,7 +1,7 @@
 package ua.tifoha;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -18,8 +18,10 @@ import java.util.Collection;
 import java.util.Date;
 
 //@SqlResultSetMapping(name = "test", entities = @EntityResult(entityClass = NotEntity.class))
+@Cacheable (true)
 @Entity
 @NamedEntityGraphs({
+        @NamedEntityGraph (name = "graph.Employee.all", includeAllAttributes = true),
         @NamedEntityGraph(name = "graph.Employee.directs", attributeNodes = {
                 @NamedAttributeNode(value = "directs", subgraph = "phones")
         }, subgraphs = @NamedSubgraph(name = "phones", attributeNodes = @NamedAttributeNode("phones"))),
@@ -57,8 +59,8 @@ public class Employee {
     
     @OneToMany(mappedBy="manager")
     private Collection<Employee> directs = new ArrayList<Employee>();
-    
-    @ManyToMany(mappedBy="employees",fetch = FetchType.EAGER)
+
+    @ManyToMany (mappedBy = "employees")
     private Collection<Project> projects = new ArrayList<Project>();
 
     public int getId() {

@@ -16,6 +16,11 @@
       <module>ch_10_Advanced_Object_Relational_Mapping</module>
       <module>ch_11_Advanced_Queries</module>
       <module>ch_12_Other_Advanced_Topics</module>
+      <module>ch_13_XML_Mapping_Files</module>
+      <module>ch_14_Packaging_And_Deployment</module>
+    <module>entities</module>
+    <module>ch_15_Testing</module>
+    <module>ch_03_Enterprise_Applications</module>
   </modules>
   <packaging>pom</packaging>
 

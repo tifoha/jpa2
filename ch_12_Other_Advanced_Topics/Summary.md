@@ -99,8 +99,43 @@ The reality is that very few applications actually need pessimistic locking, and
 The rule is that if you think you need pessimistic locking, think again.
 ####There are three supported pessimistic locking modes
 	* PESSIMISTIC_WRITE This mode will be translated by most providers into a SQL "SELECT FOR UPDATE" statement in the database, obtaining a write lock on the entity so no other applications can modify it.
+	* PESSIMISTIC_READ pessimistically achieve repeatable read semantics when no writes to the entity are expected. When an entity locked with a pessimistic read lock does end up getting modified, the lock will be upgraded to a pessimistic write lock. (во время flush) 
+	* PESSIMISTIC_FORCE_INCREMENT this mode will also increment the version field of the locked entity regardless of whether changes were made to it.
+	
+An extra property **javax.persistence.lock.scope** exists to enable target entities lock in case someone needs to acquire the locks as part of a pessimistic query. The property can be set on the query as a property, with its value set to PessimisticLockScope.EXTENDED. 
+**javax.persistence.lock.timeout** hint is likely supported by the major JPA providers; however, make sure that your provider supports it before coding to this hint. 
+LockTimeoutException will be thrown, and the caller can catch it and simply retry the call if he desires to do so. 
+if the failure is severe enough to cause a transaction failure, a PessimisticLockException will be thrown and the transaction will be marked for rollback. 
 
 ##Caching
-
+Диаграмма кеша на стр. 368
+persistence context can be termed a transactional cache because it is around only for the duration of the transaction. 
+When the entity manager is an extended one, its persistence context cache is longer-lived and will go away only when the entity manager is cleared or closed. 
+####очередность опроса кеша при операции find()
+	1. persistance context 
+	2. entity manager factory shared cahce If it does, a new Employee instance with id 100 is created from the shared one and inserted into the persistence context, and the new managed instance is returned to the caller.
+	3. The JDBC driver may have some data cached, so it could short-circuit the select clause and return at least part of the needed data.
+	4. кеш самой базы данных
+avax.persistence.Cache интерфейс shared кеша
+При очестке Shared cache лучше удалять полностью все объекты потому что можно получить битые ссылки на объекты которые имеют связи на удаленный объект
+The persistence unit cache setting is controlled by the **shared-cache-mode** element in the persistence.xml file or the equivalent **javax.persistence.sharedCache.mode** property that can be passed in at entity manager factory creation time.
+####cache modes:
+	NOT_SPECIFIED
+	ALL
+	NONE
+	DISABLE_SELECTIVE @Cacheable(false)
+	ENABLE_SELECTIVE @Cacheable(true)
+	
+It is also possible at runtime to override whether entities get read from the cache during query execution or get put into the cache when entities are obtained from the database.
+javax.persistence.cache.retrieveMode управляет получением сушьности из кеша
+javax.persistence.cache.storeMode управляет помещением сущьности в кеш
+Note that the only reason USE even exists is to allow resetting the retrieve mode back to using the cache when an entity manager is set to BYPASS. 
+CacheStoreMode.REFRESH, is useful when objects may change outside the realm of the shared cache. (Например когда несколько клиентов дергают базу)
+The REFRESH option should always be turned on if there is a chance that application data may be changed from outside of the Jpa application. 
+Note that the REFRESH option is not necessary when entities have simply been updated in a transaction. (Транзакция и так обновит кеш)
+However, the refresh() method semantics do not include updating the shared cache with the fresh database state. For that to occur, you need to also include the store mode REFRESH option as a property argument to the method.
 
 ##Utility Classes 
+A handful of methods are available on two utility interfaces, PersistenceUnitUtil and PersistenceUtil in the javax.persistence package. 
+The isLoaded(Object) method will return whether the entity passed in has all of its non-lazy state loaded. (типа сущьность на самом деле ссылка)
+isLoaded(Object, String), accepts an extra String parameter describing a named attribute of the entity, and returns whether that attribute has been loaded in the entity instance passed in. 

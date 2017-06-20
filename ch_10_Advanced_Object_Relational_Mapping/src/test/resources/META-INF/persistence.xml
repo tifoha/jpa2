@@ -1,6 +1,6 @@
 <persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
     <persistence-unit name="MainUnit" transaction-type="RESOURCE_LOCAL">
-        <class>ua.tifoha.Employee</class>
+        <class>ua.Employee</class>
         <class>ua.tifoha.EmployeeInfo</class>
         <class>ua.tifoha.Customer</class>
         <class>ua.tifoha.CustomerInfo</class>
@@ -8,8 +8,8 @@
         <class>ua.tifoha.InsertOnlyEntity</class>
         <class>ua.tifoha.OneWayRelations</class>
         <class>ua.tifoha.CompositeIdRelations</class>
-        <class>ua.tifoha.Department</class>
-        <class>ua.tifoha.Address</class>
+        <class>ua.Department</class>
+        <class>ua.Address</class>
         <class>ua.tifoha.Husband</class>
         <class>ua.tifoha.Wife</class>
         <class>ua.tifoha.Marriage</class>
@@ -22,10 +22,10 @@
         <class>ua.tifoha.inheritance.Mammal</class>
         <class>ua.tifoha.inheritance.Human</class>
         <class>ua.tifoha.inheritance.Wolf</class>
-        <class>ua.tifoha.DesignProject</class>
-        <class>ua.tifoha.Phone</class>
-        <class>ua.tifoha.Project</class>
-        <class>ua.tifoha.QualityProject</class>
+        <class>ua.DesignProject</class>
+        <class>ua.Phone</class>
+        <class>ua.Project</class>
+        <class>ua.QualityProject</class>
         <validation-mode>NONE</validation-mode>
         <!--<exclude-unlisted-classes>false</exclude-unlisted-classes>-->
         <properties>

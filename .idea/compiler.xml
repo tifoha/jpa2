@@ -17,6 +17,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ch_02_Getting_Started" />
+        <module name="ch_03_Enterprise_Applications" />
         <module name="ch_04_Object_Relational_Mapping" />
         <module name="ch_05_Collection_Mapping" />
         <module name="ch_06_Entity_Manager" />
@@ -27,10 +28,15 @@
         <module name="ch_10_Advanced_Object_Relational_Mapping" />
         <module name="ch_11_Advanced_Queries" />
         <module name="ch_12_Other_Advanced_Topics" />
+        <module name="ch_13_XML_Mapping_Files" />
+        <module name="ch_14_Packaging_And_Deployment" />
+        <module name="ch_15_Testing" />
+        <module name="entities" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="ch_02_Getting_Started" target="1.8" />
+      <module name="ch_03_Enterprise_Applications" target="1.8" />
       <module name="ch_04_Object_Relational_Mapping" target="1.8" />
       <module name="ch_05_Collection_Mapping" target="1.8" />
       <module name="ch_06_Entity_Manager" target="1.8" />
@@ -41,6 +47,10 @@
       <module name="ch_10_Advanced_Object_Relational_Mapping" target="1.8" />
       <module name="ch_11_Advanced_Queries" target="1.8" />
       <module name="ch_12_Other_Advanced_Topics" target="1.8" />
+      <module name="ch_13_XML_Mapping_Files" target="1.8" />
+      <module name="ch_14_Packaging_And_Deployment" target="1.8" />
+      <module name="ch_15_Testing" target="1.8" />
+      <module name="entities" target="1.8" />
       <module name="jpa2" target="1.8" />
     </bytecodeTargetLevel>
   </component>
