@@ -136,7 +136,10 @@ public class AppTest {
 		emp.fetch("phones", LEFT);
 //		emp.join("phones", LEFT);
 
-		q.select(emp).distinct(true);
+		q
+				.select(emp)
+				.distinct(true);
+
 		List<Employee> result = em.createQuery(q).getResultList();
 		tm.commit(ts);
 		assertThat(result, hasSize(13));
