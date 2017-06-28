@@ -4,9 +4,9 @@
         <!--<class>ua.tifoha.Firm</class>-->
         <!--<class>ua.tifoha.EntityWithoutId</class>-->
         <!--<class>ua.tifoha.Firm</class>-->
-        <class>ua.Employee</class>
-        <class>ua.Project</class>
-        <class>ua.Department</class>
+        <class>ua.tifoha.Employee</class>
+        <class>ua.tifoha.Project</class>
+        <class>ua.tifoha.Department</class>
         <!--<classAddressress</class>-->
         <properties>
             <!--<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>-->

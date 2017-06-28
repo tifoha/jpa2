@@ -3,13 +3,13 @@
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
              version="2.0">
     <persistence-unit name="MainUnit" transaction-type="RESOURCE_LOCAL">
-        <class>ua.Employee</class>
-        <class>ua.Department</class>
-        <class>ua.Address</class>
-        <class>ua.DesignProject</class>
-        <class>ua.Phone</class>
-        <class>ua.Project</class>
-        <class>ua.QualityProject</class>
+        <class>ua.tifoha.Employee</class>
+        <class>ua.tifoha.Department</class>
+        <class>ua.tifoha.Address</class>
+        <class>ua.tifoha.DesignProject</class>
+        <class>ua.tifoha.Phone</class>
+        <class>ua.tifoha.Project</class>
+        <class>ua.tifoha.QualityProject</class>
         <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
         <validation-mode>NONE</validation-mode>
         <properties>

@@ -177,6 +177,12 @@ public class TestCase {
 	}
 
 	@Test
+	public void countOnOneToManyField() throws Exception {
+		List<Object[]> employeeList = em.createQuery("select count (e.projects) from Employee e", Object[].class).getResultList();
+
+	}
+
+	@Test
 	public void queryTimeoutLimit() throws Exception {
 		em.getTransaction().begin();
 		IntStream

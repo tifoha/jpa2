@@ -129,7 +129,7 @@ The **MEMBER OF** operator and its negated form **NOT MEMBER OF** are a shorthan
 
 The **ANY**, **ALL**, and **SOME** operators can be used to compare an expression to the results of a subquery.
 
-`SELECT e FROM Employee e WHERE e.directs IS NOT EMPTY ANDe.salary < ALL (SELECT d.salary FROM e.directs d)` eturns the managers who are paid less than all the employees who work for them.
+`SELECT e FROM Employee e WHERE e.directs IS NOT EMPTY AND e.salary < ALL (SELECT d.salary FROM e.directs d)` eturns the managers who are paid less than all the employees who work for them.
 
 The **SOME** operator is an alias for the **ANY** operator. 
 

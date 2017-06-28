@@ -10,8 +10,10 @@ import static org.junit.Assert.assertTrue;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
+import javax.persistence.SynchronizationType;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -85,6 +87,16 @@ public class AttachDetach {
 		school.students.add(new Student("Vitaly"));
 		em.merge(school);
 		System.out.println(school.students);
+	}
+
+	@Test
+	public void transactionTest() throws Exception {
+		EntityManager entityManager = Persistence.createEntityManagerFactory("MainUnit").createEntityManager();
+		Employee e = entityManager.find(Employee.class, 1L);
+		System.out.println(e);
+		entityManager.getTransaction().begin();
+		entityManager.getTransaction().rollback();
+		System.out.println(entityManager.contains(e));
 	}
 
 	private byte[] toByteArray(Object object) {

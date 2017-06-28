@@ -1,12 +1,12 @@
 <persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
     <persistence-unit name="MainUnit" transaction-type="RESOURCE_LOCAL">
-        <class>ua.Employee</class>
-        <class>ua.Department</class>
-        <class>ua.Address</class>
-        <class>ua.DesignProject</class>
-        <class>ua.Phone</class>
-        <class>ua.Project</class>
-        <class>ua.QualityProject</class>
+        <class>ua.tifoha.Employee</class>
+        <class>ua.tifoha.Department</class>
+        <class>ua.tifoha.Address</class>
+        <class>ua.tifoha.DesignProject</class>
+        <class>ua.tifoha.Phone</class>
+        <class>ua.tifoha.Project</class>
+        <class>ua.tifoha.QualityProject</class>
         <validation-mode>NONE</validation-mode>
         <properties>
             <!--<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>-->

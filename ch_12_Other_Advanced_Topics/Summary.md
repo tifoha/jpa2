@@ -169,7 +169,7 @@ When the entity manager is an extended one, its persistence context cache is lon
 	2. entity manager factory shared cahce If it does, a new Employee instance with id 100 is created from the shared one and inserted into the persistence context, and the new managed instance is returned to the caller.
 	3. The JDBC driver may have some data cached, so it could short-circuit the select clause and return at least part of the needed data.
 	4. кеш самой базы данных
-avax.persistence.Cache интерфейс shared кеша
+javax.persistence.Cache интерфейс shared кеша
 
 При очестке Shared cache лучше удалять полностью все объекты потому что можно получить битые ссылки на объекты которые имеют связи на удаленный объект
 
@@ -182,13 +182,13 @@ The persistence unit cache setting is controlled by the **shared-cache-mode** el
 	ENABLE_SELECTIVE @Cacheable(true)
 It is also possible at runtime to override whether entities get read from the cache during query execution or get put into the cache when entities are obtained from the database.
 
-javax.persistence.cache.retrieveMode управляет получением сушьности из кеша
+**javax.persistence.cache.retrieveMode** управляет получением сушьности из кеша
 
-javax.persistence.cache.storeMode управляет помещением сущьности в кеш
+**javax.persistence.cache.storeMode** управляет помещением сущьности в кеш
 
 Note that the only reason USE even exists is to allow resetting the retrieve mode back to using the cache when an entity manager is set to BYPASS. 
 
-CacheStoreMode.REFRESH, is useful when objects may change outside the realm of the shared cache. (Например когда несколько клиентов дергают базу)
+**CacheStoreMode.REFRESH**, is useful when objects may change outside the realm of the shared cache. (Например когда несколько клиентов дергают базу)
 
 The REFRESH option should always be turned on if there is a chance that application data may be changed from outside of the Jpa application. 
 

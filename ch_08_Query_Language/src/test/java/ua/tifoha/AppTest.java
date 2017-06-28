@@ -49,6 +49,11 @@ public class AppTest {
 		execute(em.createQuery("SELECT e.name, e.salary FROM Employee e WHERE e.salary = (SELECT MAX(emp.salary)FROM Employee emp)"));
 	}
 
+	@Test
+	public void inTest() throws Exception {
+		execute(em.createQuery("SELECT distinct p.id, p.name FROM Employee e, in(e.projects) p"));
+	}
+
 	public void execute(Query query) {
 		System.out.println("======================================================");
 		final List<Object[]> resultList = query
